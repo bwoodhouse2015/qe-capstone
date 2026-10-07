@@ -109,15 +109,20 @@ class NewTalk(BaseModel):
     abstract: str = ""
     track: str
 
+def normalize_title(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, "title is required")
+
+    return cleaned_title
+
 
 @app.post("/api/talks", status_code=201)
 def create_talk(body: NewTalk):
     """Handler."""
-
-    cleaned_title = body.title.strip()
-
-    if not cleaned_title:
-        raise HTTPException(400, "title is required")
+    cleaned_title = normalize_title(body.title)
   
     if body.track not in TRACKS:
         raise HTTPException(400, f"track must be one of {sorted(TRACKS)}")
