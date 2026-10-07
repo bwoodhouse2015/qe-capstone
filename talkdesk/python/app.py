@@ -113,8 +113,12 @@ class NewTalk(BaseModel):
 @app.post("/api/talks", status_code=201)
 def create_talk(body: NewTalk):
     """Handler."""
-    if not body.title.strip():
+
+    cleaned_title = body.title.strip()
+
+    if not cleaned_title:
         raise HTTPException(400, "title is required")
+  
     if body.track not in TRACKS:
         raise HTTPException(400, f"track must be one of {sorted(TRACKS)}")
     with db() as c:
@@ -124,7 +128,7 @@ def create_talk(body: NewTalk):
         r = c.execute(
             "INSERT INTO talks (speaker_id,title,abstract,track) "
             "VALUES (%s,%s,%s,%s) RETURNING *",
-            (body.speaker_id, body.title, body.abstract, body.track),
+            (body.speaker_id, cleaned_title, body.abstract, body.track),
         ).fetchone()
         c.commit()
     return {"id": r["id"], "title": r["title"], "track": r["track"],
