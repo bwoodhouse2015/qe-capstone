@@ -1,0 +1,68 @@
+# TalkDesk — the program's reference System Under Test.
+#
+#   docker compose --profile python up -d --wait     # or java / dotnet
+#
+# One profile per implementation. All three satisfy contract/CONTRACT.md and all
+# three must pass the conformance suite, so an instructor can demonstrate in
+# whichever language the room is working in.
+#
+# NOTE THE BIND ADDRESS. Ports are published to 127.0.0.1, not 0.0.0.0. This is
+# a teaching fixture with deliberately planted weaknesses; it is not hardened and
+# must not be reachable from anywhere but the machine running it.
+
+name: talkdesk
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: talkdesk
+      POSTGRES_PASSWORD: talkdesk
+      POSTGRES_DB: talkdesk
+    ports: ['127.0.0.1:5432:5432']
+    volumes:
+      # *.sql in this directory runs once, in name order, on first start
+      - ./db:/docker-entrypoint-initdb.d:ro
+    # Log every statement. This is how a learner SEES the N+1 rather than
+    # inferring it from latency: `docker compose logs db | grep -c SELECT`
+    # after one request to /api/talks returns 101.
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_min_duration_statement=0"]
+    healthcheck:
+      # pg_isready alone succeeds while docker-entrypoint-initdb.d is still
+      # inserting 50,000 rows, so `--wait` could clear against a half-seeded
+      # database and the first conformance run would fail for no real reason.
+      test: ['CMD-SHELL', 'pg_isready -U talkdesk && psql -U talkdesk -d talkdesk -tAc "select count(*) = 50000 from talks" | grep -q t']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    tmpfs:
+      - /var/lib/postgresql/data      # disposable: every start is a clean seed
+
+  python:
+    profiles: ['python']
+    build: ./python
+    environment:
+      DB_URL: postgresql://talkdesk:talkdesk@db:5432/talkdesk
+    ports: ['127.0.0.1:8080:8080']
+    depends_on:
+      db: { condition: service_healthy }
+
+  java:
+    profiles: ['java']
+    build: ./java
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/talkdesk
+      DB_USER: talkdesk
+      DB_PASSWORD: talkdesk
+    ports: ['127.0.0.1:8080:8080']
+    depends_on:
+      db: { condition: service_healthy }
+
+  dotnet:
+    profiles: ['dotnet']
+    build: ./dotnet
+    environment:
+      DB_URL: 'Host=db;Port=5432;Database=talkdesk;Username=talkdesk;Password=talkdesk'
+    ports: ['127.0.0.1:8080:8080']
+    depends_on:
+      db: { condition: service_healthy }
