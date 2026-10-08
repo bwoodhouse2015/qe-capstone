@@ -155,7 +155,7 @@ def test_submit_page_renders(client):
     r = client.get("/submit")
     assert r.status_code == 200
     assert "<form" in r.text
-    
+
 def test_create_trims_title_whitespace(client):
     response = client.post("/api/talks", json={
         "speaker_id": 1,
@@ -165,4 +165,4 @@ def test_create_trims_title_whitespace(client):
     })
 
     assert response.status_code == 201
-    assert response.json()["title"] == "Testing with Docker"
+    assert response.json()["title"] == "Testing with Docker" 
