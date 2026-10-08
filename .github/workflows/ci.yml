@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      -week2-functional-testing
+      - week2-functional-testing
   pull_request:
     branches:
       - main
-      -week2-functional-testing
+      - week2-functional-testing
   workflow_dispatch:
 
 jobs:
