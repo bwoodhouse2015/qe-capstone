@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      -week2-functional-testing
   pull_request:
     branches:
       - main
+      -week2-functional-testing
   workflow_dispatch:
 
 jobs:
@@ -16,7 +18,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-cov fastapi httpx
+
+      - name: Run tests and generate coverage
+        working-directory: talkdesk
+        env:
+          PYTHONPATH: python
+        run: |
+          pytest tests/integration tests/e2e -q --cov=python/app.py --cov-branch --cov-report=xml:../coverage.xml
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+`
+
