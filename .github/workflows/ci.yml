@@ -58,10 +58,14 @@ jobs:
           PYTHONPATH: python
           DB_URL: postgresql://talkdesk:talkdesk@localhost:5432/talkdesk
         run: |
-          pytest tests/integration tests/e2e -q --cov=python/app.py --cov-branch --cov-report=xml:../coverage.xml
+          pytest tests/integration tests/e2e -q \
+            --cov=app \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml:../coverage.xml
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
