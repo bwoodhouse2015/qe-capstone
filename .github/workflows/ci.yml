@@ -15,6 +15,21 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: talkdesk
+          POSTGRES_PASSWORD: talkdesk
+          POSTGRES_DB: talkdesk
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U talkdesk -d talkdesk"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,12 +40,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pytest pytest-cov fastapi httpx
+          python -m pip install --upgrade pip
+          python -m pip install -r talkdesk/python/requirements.txt
+          python -m pip install -r talkdesk/tests/requirements-dev.txt
+          python -m pip install httpx
 
       - name: Run tests and generate coverage
         working-directory: talkdesk
         env:
           PYTHONPATH: python
+          DB_URL: postgresql://talkdesk:talkdesk@localhost:5432/talkdesk
         run: |
           pytest tests/integration tests/e2e -q --cov=python/app.py --cov-branch --cov-report=xml:../coverage.xml
 
