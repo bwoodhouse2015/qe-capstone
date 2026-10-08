@@ -186,7 +186,22 @@ def login(body: Login):
 
 
 # ────────────────────────────────────────────────────────────── HTML
-PAGE = """Handler."""
+PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+</head>
+<body>
+    <main>
+        {body}
+    </main>
+</body>
+</html>
+"""
+
 
 
 def page(title, body):
@@ -212,9 +227,30 @@ def home():
 
 @app.get("/submit", response_class=HTMLResponse)
 def submit_form():
-    """Handler."""
-    return page("Submit a talk", """Handler.""")
+    """Render the talk submission form."""
+    return page("Submit a talk", """
+        <h2>Submit a talk</h2>
+        <form method="post" action="api/talks">
+    
+            <label for="speaker_id">Speaker ID</label>
+            <input id="speaker_id" name="speaker_id" type="number" required>
 
+            <label for="title">Talk title</label>
+            <input id="title" name="title" type="text" required>
+
+            <label for="abstract">Abstract</label>
+            <textarea id="abstract" name="abstract"></textarea>
+
+            <label for="track">Track</label>
+            <select id="track" name="track" required>
+                <option value="testing">Testing</option>
+                <option value="delivery">Delivery</option>
+                <option value="culture">Culture</option>
+            </select>
+
+            <button type="submit">Submit talk</button>
+        </form>
+    """)
 
 @app.get("/login", response_class=HTMLResponse)
 def login_form():
