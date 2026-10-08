@@ -45,6 +45,13 @@ jobs:
           python -m pip install -r talkdesk/tests/requirements-dev.txt
           python -m pip install httpx
 
+      - name: Initialize TalkDesk database
+        env:
+          PGPASSWORD: talkdesk
+        run: |
+          psql -h localhost -U talkdesk -d talkdesk -f talkdesk/db/01-schema.sql
+          psql -h localhost -U talkdesk -d talkdesk -f talkdesk/db/02-seed.sql
+
       - name: Run tests and generate coverage
         working-directory: talkdesk
         env:
