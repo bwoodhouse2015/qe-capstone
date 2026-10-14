@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
-import app as talkdesk
 
-client = TestClient(talkdesk.app)
+from talkdesk import app
+
+
+client = TestClient(app.app)
 
 def test_talk_submission_flow():
     """

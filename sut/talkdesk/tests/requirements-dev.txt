@@ -1,5 +1,0 @@
-# For running the supplied suite with coverage.
-# Install alongside python/requirements.txt.
-pytest==8.3.4
-pytest-cov==6.0.0
-httpx==0.28.1

@@ -263,3 +263,5 @@ def login_form():
   <input id="password" name="password" type="password" required>
   <button type="submit">Sign in</button>
 </form>""")
+
+print("app.py is running")

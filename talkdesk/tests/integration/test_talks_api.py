@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-import app as talkdesk
+from talkdesk import app
 
 
 client = TestClient(talkdesk.app)

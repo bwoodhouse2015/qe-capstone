@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
-import app as talkdesk
+from python.app import app
 
-client = TestClient(talkdesk.app)
+client = TestClient(app)
 
 def test_search_talk_flow():
     """
