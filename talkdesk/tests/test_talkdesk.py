@@ -19,7 +19,7 @@ them.
 import pytest
 from fastapi.testclient import TestClient
 
-import app as talkdesk
+from talkdesk import app as talkdesk
 
 
 @pytest.fixture(scope="module")
