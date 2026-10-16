@@ -19,8 +19,8 @@ them.
 import pytest
 from fastapi.testclient import TestClient
 
-from talkdesk import app as talkdesk
 
+import app as talkdesk
 
 @pytest.fixture(scope="module")
 def client():

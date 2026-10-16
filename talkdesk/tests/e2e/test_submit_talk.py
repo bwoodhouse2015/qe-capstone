@@ -1,9 +1,14 @@
 from fastapi.testclient import TestClient
+from pathlib import Path
+import sys
 
-from talkdesk import app
+# Make the project root importable when this test is run directly.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from app import app
 
 
-client = TestClient(app.app)
+client = TestClient(app)
 
 def test_talk_submission_flow():
     """

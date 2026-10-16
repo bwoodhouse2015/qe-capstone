@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
-from talkdesk import app
 
+from app import app
 
-client = TestClient(talkdesk.app)
+client = TestClient(app)
+
 
 
 def test_get_talks_returns_success():

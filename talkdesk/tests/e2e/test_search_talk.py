@@ -1,11 +1,12 @@
 from fastapi.testclient import TestClient
-from python.app import app
+import app
 
-client = TestClient(app)
+
+client = TestClient(app.app)
 
 def test_search_talk_flow():
     """
-    Given talks exist
+    Given talks exist   
 
     When the user searches for a talk
 
