@@ -5,7 +5,7 @@ import sys
 # Make the project root importable when this test is run directly.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from app import app
+from talkdesk.app import app
 
 
 client = TestClient(app)
