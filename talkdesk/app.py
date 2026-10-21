@@ -68,9 +68,12 @@ def list_talks(track: Optional[str] = None, status: Optional[str] = None):
                 "created_at": r["created_at"].isoformat() + "Z",
             })
     return out
-def normalize_search_query(query: str) -> str:
+##def normalize_search_query(query: str) -> str:
     return " ".join(query.split()).lower()
-
+def normalize_search_query(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = raw_query.split()
+    return " ".join(normalized_words).casefold()
 
 @app.get("/api/talks/search")
 def search_talks(q: str = ""):
