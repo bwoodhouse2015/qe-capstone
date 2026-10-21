@@ -68,22 +68,38 @@ def list_talks(track: Optional[str] = None, status: Optional[str] = None):
                 "created_at": r["created_at"].isoformat() + "Z",
             })
     return out
+def normalize_search_query(query: str) -> str:
+    return " ".join(query.split()).lower()
 
 
 @app.get("/api/talks/search")
 def search_talks(q: str = ""):
-    """Handler."""
+    """Search talks by a normalized title query."""
+    normalized_query = normalize_search_query(q)
+
     with db() as c:
         rows = c.execute(
             "SELECT t.*, s.name AS speaker_name FROM talks t "
             "JOIN speakers s ON s.id = t.speaker_id "
             "WHERE t.title ILIKE %s ORDER BY t.id LIMIT 100",
-            (f"%{q}%",),
+            (f"%{normalized_query}%",),
         ).fetchall()
-    return [{"id": r["id"], "title": r["title"], "track": r["track"],
-             "status": r["status"], "score": r["score"],
-             "speaker": {"id": r["speaker_id"], "name": r["speaker_name"]},
-             "created_at": r["created_at"].isoformat() + "Z"} for r in rows]
+
+    return [
+        {
+            "id": r["id"],
+            "title": r["title"],
+            "track": r["track"],
+            "status": r["status"],
+            "score": r["score"],
+            "speaker": {
+                "id": r["speaker_id"],
+                "name": r["speaker_name"],
+            },
+            "created_at": r["created_at"].isoformat() + "Z",
+        }
+        for r in rows
+    ]
 
 
 @app.get("/api/talks/{talk_id}")
