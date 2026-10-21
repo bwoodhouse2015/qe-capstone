@@ -2,22 +2,15 @@ from fastapi.testclient import TestClient
 from pathlib import Path
 import sys
 
-# Make the project root importable when this test is run directly.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from talkdesk.app import app
 
-
 client = TestClient(app)
 
+
 def test_talk_submission_flow():
-    """
-    Given a speaker is on the submission page
-
-    When valid talk information is submitted
-
-    Then the talk is stored successfully
-    """
+    print("START TEST")
 
     response = client.post(
         "/api/talks",
@@ -28,6 +21,8 @@ def test_talk_submission_flow():
             "track": "testing"
         }
     )
+
+    print("POST FINISHED")
 
     assert response.status_code == 201
 

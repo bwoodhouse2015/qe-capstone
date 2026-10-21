@@ -2,11 +2,11 @@ from fastapi.testclient import TestClient
 from talkdesk.app import app
 
 
-client = TestClient(app.app)
+client = TestClient(app)
 
 def test_search_talk_flow():
     """
-    Given talks exist   
+    Given talks exist
 
     When the user searches for a talk
 

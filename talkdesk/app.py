@@ -123,7 +123,7 @@ def normalize_title(title: str) -> str:
 def create_talk(body: NewTalk):
     """Handler."""
     cleaned_title = normalize_title(body.title)
-  
+
     if body.track not in TRACKS:
         raise HTTPException(400, f"track must be one of {sorted(TRACKS)}")
     with db() as c:
@@ -231,7 +231,7 @@ def submit_form():
     return page("Submit a talk", """
         <h2>Submit a talk</h2>
         <form method="post" action="api/talks">
-    
+
             <label for="speaker_id">Speaker ID</label>
             <input id="speaker_id" name="speaker_id" type="number" required>
 
@@ -263,5 +263,6 @@ def login_form():
   <input id="password" name="password" type="password" required>
   <button type="submit">Sign in</button>
 </form>""")
+
 
 print("app.py is running")
