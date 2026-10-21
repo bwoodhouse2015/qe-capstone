@@ -29,3 +29,21 @@ Potential causes:
 - N+1 query pattern in /api/talks
 - Real database integration tests
 - Python 3.14 environment
+
+
+
+Coverage Baseline
+Date: 2026-10-21
+
+Command:
+
+python -m pytest tests/unit --cov=app --cov-report=term
+
+Result:
+
+Line Coverage: 43%
+
+Notes:
+
+Coverage currently comes primarily from normalization-related unit tests.
+Additional unit tests will be added in future iterations.
