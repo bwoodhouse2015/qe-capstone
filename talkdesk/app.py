@@ -68,8 +68,7 @@ def list_talks(track: Optional[str] = None, status: Optional[str] = None):
                 "created_at": r["created_at"].isoformat() + "Z",
             })
     return out
-##def normalize_search_query(query: str) -> str:
-    return " ".join(query.split()).lower()
+
 def normalize_search_query(raw_query: str) -> str:
     """Return a normalized search query."""
     normalized_words = raw_query.split()
@@ -270,18 +269,70 @@ def submit_form():
             <button type="submit">Submit talk</button>
         </form>
     """)
-
 @app.get("/login", response_class=HTMLResponse)
 def login_form():
+    """Render the reviewer login form."""
     return page("Sign in", """
 <h2>Reviewer sign-in</h2>
-<form method="post" action="/api/login">
+
+<form id="login-form">
   <label for="email">Email</label>
-  <input id="email" name="email" type="email" required>
+  <input
+      id="email"
+      name="email"
+      type="email"
+      data-testid="email"
+      required
+  >
+
   <label for="password">Password</label>
-  <input id="password" name="password" type="password" required>
-  <button type="submit">Sign in</button>
-</form>""")
+  <input
+      id="password"
+      name="password"
+      type="password"
+      data-testid="password"
+      required
+  >
+
+  <button type="submit" data-testid="login-submit">
+      Sign in
+  </button>
+</form>
+
+<p id="login-error" role="alert"></p>
+<section id="login-result" aria-live="polite"></section>
+
+<script>
+document
+  .getElementById("login-form")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+    });
+
+    const errorElement = document.getElementById("login-error");
+    const resultElement = document.getElementById("login-result");
+
+    if (response.ok) {
+      errorElement.textContent = "";
+      resultElement.innerHTML =
+        '<h2 data-testid="welcome">Welcome, reviewer</h2>';
+    } else {
+      resultElement.innerHTML = "";
+      errorElement.textContent = "Invalid credentials";
+    }
+  });
+</script>
+""")
 
 
 print("app.py is running")

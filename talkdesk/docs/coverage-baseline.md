@@ -47,3 +47,12 @@ Notes:
 
 Coverage currently comes primarily from normalization-related unit tests.
 Additional unit tests will be added in future iterations.
+
+
+Week 1 Exit Gate #2 verified:
+- docker build succeeded
+- container started successfully
+- application served via Uvicorn
+
+
+
