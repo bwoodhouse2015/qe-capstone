@@ -8,7 +8,10 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 from typing import Optional
 
-DB_URL = os.environ.get("DB_URL", "postgresql://talkdesk:talkdesk@localhost:5432/talkdesk")
+DB_URL = os.environ.get(
+    "DB_URL",
+    "postgresql://talkdesk:talkdesk@127.0.0.1:5432/talkdesk"
+)
 TRACKS = {"testing", "architecture", "delivery", "culture"}
 STATUSES = {"submitted", "accepted", "rejected"}
 
@@ -28,7 +31,7 @@ async def verbose_error_handler(request, exc):
 
 
 def db():
-    return psycopg.connect(DB_URL, row_factory=dict_row)
+    return psycopg.connect(DB_URL, row_factory=dict_row,connect_timeout=5)
 
 
 # ────────────────────────────────────────────────────────────── health
