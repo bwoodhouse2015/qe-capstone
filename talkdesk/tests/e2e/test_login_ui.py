@@ -11,4 +11,8 @@ def test_reviewer_can_sign_in(page):
         "reviewer"
     )
 
-    assert page.locator("text=Welcome, reviewer").is_visible()
+    from playwright.sync_api import expect
+
+    expect(
+        page.locator("text=Welcome, reviewer")
+    ).to_be_visible()
