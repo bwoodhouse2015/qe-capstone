@@ -3,7 +3,7 @@ import os
 import traceback
 import psycopg
 from psycopg.rows import dict_row
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 from typing import Optional

@@ -14,14 +14,14 @@
 meta:
   # Bump when you change a threshold, and say why in docs/refactor-log.md.
   revision: 1
-  owner: "your.name@example.com"
+  owner: "bethany.woodhouse@platotech.com"
 
 coverage:
   # false until Week 2 §4, where turning it on IS the exercise. The readers,
   # the workbooks and the Week 0 exit gate all say coverage is measured rather
   # than gated before then; this is the switch that makes that true. Flip it
   # and the Analyze stage starts failing below the numbers underneath.
-  enabled: false           # Week 2
+  enabled: true          #changed to true in week 3
   line_minimum: 80         # percent
   branch_minimum: 60
   # Where each profile writes its report. The Analyze stage reads these.
@@ -35,7 +35,7 @@ maintainability:
   # false until Week 2. The SonarQube Cloud analysis step reads this, so a
   # learner with no SONAR_TOKEN yet gets a skipped step rather than a red
   # stage on their very first push.
-  enabled: false           # Week 2
+  enabled: true     #changed to true in week 3
   minimum_grade: A         # SonarQube Cloud rating
   max_new_code_smells: 0
 

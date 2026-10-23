@@ -3,7 +3,7 @@
 Written the way a real team writes one under deadline: happy paths covered,
 obvious errors covered, and one validation branch nobody got back to.
 
-That gap is deliberate and it is defect **D-9**. A valid score is patched here,
+That gap is deliberate, and it is defect **D-9**. A valid score is patched here,
 so the validation line runs; a score outside 1-10 never is, so the line that
 rejects one never runs. Line coverage looks respectable and the branch is
 unverified — the Week 1 exercise is to notice that the percentage did not tell
@@ -165,4 +165,4 @@ def test_create_trims_title_whitespace(client):
     })
 
     assert response.status_code == 201
-    assert response.json()["title"] == "Testing with Docker" 
+    assert response.json()["title"] == "Testing with Docker"
