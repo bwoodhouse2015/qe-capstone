@@ -44,10 +44,12 @@ jobs:
           python -m pip install -r talkdesk/python/requirements.txt
 
           python -m pip install -r talkdesk/requirements-dev.txt
-
-         
-
           python -m pip install httpx
+
+
+      - name: Install Playwright browsers
+        run: |
+           python -m playwright install chromium
 
       - name: Initialize TalkDesk database
         env:
