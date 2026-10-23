@@ -55,7 +55,7 @@ jobs:
       - name: Run tests and generate coverage
         working-directory: talkdesk
         env:
-          PYTHONPATH: .
+          PYTHONPATH: ${{ github.workspace }}/talkdesk
           DB_URL: postgresql://talkdesk:talkdesk@localhost:5432/talkdesk
         run: |
           pytest tests/integration tests/e2e -q \
