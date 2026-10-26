@@ -1,0 +1,562 @@
+"""Handler."""
+import os
+import traceback
+import psycopg
+from psycopg.rows import dict_row
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel
+from typing import Optional
+
+DB_URL = os.environ.get(
+    "DB_URL",
+    "postgresql://talkdesk:talkdesk@127.0.0.1:5432/talkdesk"
+)
+TRACKS = {"testing", "architecture", "delivery", "culture"}
+STATUSES = {"submitted", "accepted", "rejected"}
+
+app = FastAPI(title="TalkDesk", docs_url=None, redoc_url=None)
+
+
+from mutmut.mutation.trampoline import wrap_in_trampoline as _mutmut_mutated, MutantDict
+
+
+@app.exception_handler(Exception)
+async def verbose_error_handler(request, exc):
+    """Handler."""
+    return JSONResponse(
+        status_code=500,
+        content={"error": type(exc).__name__,
+                 "message": str(exc),
+                 "path": request.url.path,
+                 "traceback": traceback.format_exc().splitlines()},
+    )
+mutants_x_db__mutmut: MutantDict = {}  # type: ignore
+
+
+@_mutmut_mutated(mutants_x_db__mutmut)
+def db():
+    return psycopg.connect(DB_URL, row_factory=dict_row,connect_timeout=5)
+
+
+def x_db__mutmut_orig():
+    return psycopg.connect(DB_URL, row_factory=dict_row,connect_timeout=5)
+
+
+def x_db__mutmut_1():
+    return psycopg.connect(None, row_factory=dict_row,connect_timeout=5)
+
+
+def x_db__mutmut_2():
+    return psycopg.connect(DB_URL, row_factory=None,connect_timeout=5)
+
+
+def x_db__mutmut_3():
+    return psycopg.connect(DB_URL, row_factory=dict_row,connect_timeout=None)
+
+
+def x_db__mutmut_4():
+    return psycopg.connect(row_factory=dict_row,connect_timeout=5)
+
+
+def x_db__mutmut_5():
+    return psycopg.connect(DB_URL, connect_timeout=5)
+
+
+def x_db__mutmut_6():
+    return psycopg.connect(DB_URL, row_factory=dict_row,)
+
+
+def x_db__mutmut_7():
+    return psycopg.connect(DB_URL, row_factory=dict_row,connect_timeout=6)
+
+mutants_x_db__mutmut['_mutmut_orig'] = x_db__mutmut_orig # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_1'] = x_db__mutmut_1 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_2'] = x_db__mutmut_2 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_3'] = x_db__mutmut_3 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_4'] = x_db__mutmut_4 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_5'] = x_db__mutmut_5 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_6'] = x_db__mutmut_6 # type: ignore # mutmut generated
+mutants_x_db__mutmut['x_db__mutmut_7'] = x_db__mutmut_7 # type: ignore # mutmut generated
+
+
+# ────────────────────────────────────────────────────────────── health
+@app.get("/health")
+def health():
+    try:
+        with db() as c:
+            c.execute("SELECT 1")
+        return {"status": "ok"}
+    except Exception:
+        return JSONResponse({"status": "degraded"}, status_code=503)
+
+
+# ────────────────────────────────────────────────────────────── API
+@app.get("/api/talks")
+def list_talks(track: Optional[str] = None, status: Optional[str] = None):
+    """Handler."""
+    sql = "SELECT * FROM talks WHERE 1=1"
+    args = []
+    if track:
+        sql += " AND track = %s"; args.append(track)
+    if status:
+        sql += " AND status = %s"; args.append(status)
+    sql += " ORDER BY id LIMIT 100"
+
+    with db() as c:
+        rows = c.execute(sql, args).fetchall()
+        out = []
+        for r in rows:
+            # the N+1: a separate round trip per row
+            sp = c.execute("SELECT id, name FROM speakers WHERE id = %s",
+                           (r["speaker_id"],)).fetchone()
+            out.append({
+                "id": r["id"], "title": r["title"], "track": r["track"],
+                "status": r["status"], "score": r["score"],
+                "speaker": {"id": sp["id"], "name": sp["name"]},
+                "created_at": r["created_at"].isoformat() + "Z",
+            })
+    return out
+mutants_x_normalize_search_query__mutmut: MutantDict = {}  # type: ignore
+
+@_mutmut_mutated(mutants_x_normalize_search_query__mutmut)
+def normalize_search_query(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = raw_query.split()
+    return " ".join(normalized_words).casefold()
+
+def x_normalize_search_query__mutmut_orig(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = raw_query.split()
+    return " ".join(normalized_words).casefold()
+
+def x_normalize_search_query__mutmut_1(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = None
+    return " ".join(normalized_words).casefold()
+
+def x_normalize_search_query__mutmut_2(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = raw_query.split()
+    return " ".join(None).casefold()
+
+def x_normalize_search_query__mutmut_3(raw_query: str) -> str:
+    """Return a normalized search query."""
+    normalized_words = raw_query.split()
+    return "XX XX".join(normalized_words).casefold()
+
+mutants_x_normalize_search_query__mutmut['_mutmut_orig'] = x_normalize_search_query__mutmut_orig # type: ignore # mutmut generated
+mutants_x_normalize_search_query__mutmut['x_normalize_search_query__mutmut_1'] = x_normalize_search_query__mutmut_1 # type: ignore # mutmut generated
+mutants_x_normalize_search_query__mutmut['x_normalize_search_query__mutmut_2'] = x_normalize_search_query__mutmut_2 # type: ignore # mutmut generated
+mutants_x_normalize_search_query__mutmut['x_normalize_search_query__mutmut_3'] = x_normalize_search_query__mutmut_3 # type: ignore # mutmut generated
+
+@app.get("/api/talks/search")
+def search_talks(q: str = ""):
+    """Search talks by a normalized title query."""
+    normalized_query = normalize_search_query(q)
+
+    with db() as c:
+        rows = c.execute(
+            "SELECT t.*, s.name AS speaker_name FROM talks t "
+            "JOIN speakers s ON s.id = t.speaker_id "
+            "WHERE t.title ILIKE %s ORDER BY t.id LIMIT 100",
+            (f"%{normalized_query}%",),
+        ).fetchall()
+
+    return [
+        {
+            "id": r["id"],
+            "title": r["title"],
+            "track": r["track"],
+            "status": r["status"],
+            "score": r["score"],
+            "speaker": {
+                "id": r["speaker_id"],
+                "name": r["speaker_name"],
+            },
+            "created_at": r["created_at"].isoformat() + "Z",
+        }
+        for r in rows
+    ]
+
+
+@app.get("/api/talks/{talk_id}")
+def get_talk(talk_id: str):
+    """Handler."""
+    tid = int(talk_id)                      # deliberately unguarded
+    with db() as c:
+        r = c.execute("SELECT * FROM talks WHERE id = %s", (tid,)).fetchone()
+        if not r:
+            raise HTTPException(404, "talk not found")
+        sp = c.execute("SELECT * FROM speakers WHERE id = %s",
+                       (r["speaker_id"],)).fetchone()
+    return {"id": r["id"], "title": r["title"], "abstract": r["abstract"],
+            "track": r["track"], "status": r["status"], "score": r["score"],
+            "speaker": {"id": sp["id"], "name": sp["name"], "email": sp["email"],
+                        "bio": sp["bio"]},
+            "created_at": r["created_at"].isoformat() + "Z"}
+
+
+class NewTalk(BaseModel):
+    speaker_id: int
+    title: str
+    abstract: str = ""
+    track: str
+mutants_x_normalize_title__mutmut: MutantDict = {}  # type: ignore
+
+@_mutmut_mutated(mutants_x_normalize_title__mutmut)
+def normalize_title(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_orig(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_1(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = None
+
+    if not cleaned_title:
+        raise HTTPException(400, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_2(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if cleaned_title:
+        raise HTTPException(400, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_3(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(None, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_4(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, None)
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_5(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException("title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_6(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, )
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_7(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(401, "title is required")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_8(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, "XXtitle is requiredXX")
+
+    return cleaned_title
+
+def x_normalize_title__mutmut_9(title: str) -> str:
+    """Trim and validate a talk title."""
+    cleaned_title = title.strip()
+
+    if not cleaned_title:
+        raise HTTPException(400, "TITLE IS REQUIRED")
+
+    return cleaned_title
+
+mutants_x_normalize_title__mutmut['_mutmut_orig'] = x_normalize_title__mutmut_orig # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_1'] = x_normalize_title__mutmut_1 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_2'] = x_normalize_title__mutmut_2 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_3'] = x_normalize_title__mutmut_3 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_4'] = x_normalize_title__mutmut_4 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_5'] = x_normalize_title__mutmut_5 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_6'] = x_normalize_title__mutmut_6 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_7'] = x_normalize_title__mutmut_7 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_8'] = x_normalize_title__mutmut_8 # type: ignore # mutmut generated
+mutants_x_normalize_title__mutmut['x_normalize_title__mutmut_9'] = x_normalize_title__mutmut_9 # type: ignore # mutmut generated
+
+
+@app.post("/api/talks", status_code=201)
+def create_talk(body: NewTalk):
+    """Handler."""
+    cleaned_title = normalize_title(body.title)
+
+    if body.track not in TRACKS:
+        raise HTTPException(400, f"track must be one of {sorted(TRACKS)}")
+    with db() as c:
+        if not c.execute("SELECT 1 FROM speakers WHERE id = %s",
+                         (body.speaker_id,)).fetchone():
+            raise HTTPException(404, "speaker not found")
+        r = c.execute(
+            "INSERT INTO talks (speaker_id,title,abstract,track) "
+            "VALUES (%s,%s,%s,%s) RETURNING *",
+            (body.speaker_id, cleaned_title, body.abstract, body.track),
+        ).fetchone()
+        c.commit()
+    return {"id": r["id"], "title": r["title"], "track": r["track"],
+            "status": r["status"], "score": r["score"],
+            "speaker": {"id": r["speaker_id"]},
+            "created_at": r["created_at"].isoformat() + "Z"}
+
+
+class TalkPatch(BaseModel):
+    status: Optional[str] = None
+    score: Optional[int] = None
+
+
+@app.patch("/api/talks/{talk_id}")
+def patch_talk(talk_id: int, body: TalkPatch):
+    """Handler."""
+    if body.status is not None and body.status not in STATUSES:
+        raise HTTPException(400, f"status must be one of {sorted(STATUSES)}")
+    if body.score is not None and not (1 <= body.score <= 10):
+        raise HTTPException(400, "score must be between 1 and 10")
+    sets, args = [], []
+    if body.status is not None:
+        sets.append("status = %s"); args.append(body.status)
+    if body.score is not None:
+        sets.append("score = %s"); args.append(body.score)
+    if not sets:
+        raise HTTPException(400, "nothing to update")
+    args.append(talk_id)
+    with db() as c:
+        r = c.execute(f"UPDATE talks SET {', '.join(sets)} WHERE id = %s RETURNING *",
+                      args).fetchone()
+        if not r:
+            raise HTTPException(404, "talk not found")
+        c.commit()
+    return {"id": r["id"], "title": r["title"], "track": r["track"],
+            "status": r["status"], "score": r["score"]}
+
+
+class Login(BaseModel):
+    email: str
+    password: str
+
+
+@app.post("/api/login")
+def login(body: Login):
+    """Handler."""
+    if body.email.endswith("@talkdesk.test") and body.password == "reviewer":
+        return {"token": "talkdesk-demo-token-not-a-credential"}
+    raise HTTPException(401, "invalid credentials")
+
+
+# ────────────────────────────────────────────────────────────── HTML
+PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+</head>
+<body>
+    <main>
+        {body}
+    </main>
+</body>
+</html>
+"""
+mutants_x_page__mutmut: MutantDict = {}  # type: ignore
+
+
+
+@_mutmut_mutated(mutants_x_page__mutmut)
+def page(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(title=title, body=body))
+
+
+
+def x_page__mutmut_orig(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(title=title, body=body))
+
+
+
+def x_page__mutmut_1(title, body):
+    """Handler."""
+    return HTMLResponse(None)
+
+
+
+def x_page__mutmut_2(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(title=None, body=body))
+
+
+
+def x_page__mutmut_3(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(title=title, body=None))
+
+
+
+def x_page__mutmut_4(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(body=body))
+
+
+
+def x_page__mutmut_5(title, body):
+    """Handler."""
+    return HTMLResponse(PAGE.format(title=title, ))
+
+mutants_x_page__mutmut['_mutmut_orig'] = x_page__mutmut_orig # type: ignore # mutmut generated
+mutants_x_page__mutmut['x_page__mutmut_1'] = x_page__mutmut_1 # type: ignore # mutmut generated
+mutants_x_page__mutmut['x_page__mutmut_2'] = x_page__mutmut_2 # type: ignore # mutmut generated
+mutants_x_page__mutmut['x_page__mutmut_3'] = x_page__mutmut_3 # type: ignore # mutmut generated
+mutants_x_page__mutmut['x_page__mutmut_4'] = x_page__mutmut_4 # type: ignore # mutmut generated
+mutants_x_page__mutmut['x_page__mutmut_5'] = x_page__mutmut_5 # type: ignore # mutmut generated
+
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    rows = list_talks()
+    trs = "".join(
+        f'<tr><td><a href="/api/talks/{t["id"]}">{t["title"]}</a></td>'
+        f'<td>{t["speaker"]["name"]}</td><td>{t["track"]}</td>'
+        f'<td><span class="badge-{t["status"]}">{t["status"]}</span></td></tr>'
+        for t in rows[:50])
+    return page("Talks", f"""
+<h2>Submitted talks</h2>
+<table>
+  <thead><tr><th>Title</th><th>Speaker</th><th>Track</th><th>Status</th></tr></thead>
+  <tbody>{trs}</tbody>
+</table>""")
+
+
+@app.get("/submit", response_class=HTMLResponse)
+def submit_form():
+    """Render the talk submission form."""
+    return page("Submit a talk", """
+        <h2>Submit a talk</h2>
+        <form method="post" action="api/talks">
+
+            <label for="speaker_id">Speaker ID</label>
+            <input id="speaker_id" name="speaker_id" type="number" required>
+
+            <label for="title">Talk title</label>
+            <input id="title" name="title" type="text" required>
+
+            <label for="abstract">Abstract</label>
+            <textarea id="abstract" name="abstract"></textarea>
+
+            <label for="track">Track</label>
+            <select id="track" name="track" required>
+                <option value="testing">Testing</option>
+                <option value="delivery">Delivery</option>
+                <option value="culture">Culture</option>
+            </select>
+
+            <button type="submit">Submit talk</button>
+        </form>
+    """)
+@app.get("/login", response_class=HTMLResponse)
+def login_form():
+    """Render the reviewer login form."""
+    return page("Sign in", """
+<h2>Reviewer sign-in</h2>
+
+<form id="login-form">
+  <label for="email">Email</label>
+  <input
+      id="email"
+      name="email"
+      type="email"
+      data-testid="email"
+      required
+  >
+
+  <label for="password">Password</label>
+  <input
+      id="password"
+      name="password"
+      type="password"
+      data-testid="password"
+      required
+  >
+
+  <button type="submit" data-testid="login-submit">
+      Sign in
+  </button>
+</form>
+
+<p id="login-error" role="alert"></p>
+<section id="login-result" aria-live="polite"></section>
+
+<script>
+document
+  .getElementById("login-form")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      })
+    });
+
+    const errorElement = document.getElementById("login-error");
+    const resultElement = document.getElementById("login-result");
+
+    if (response.ok) {
+      errorElement.textContent = "";
+      resultElement.innerHTML =
+        '<h2 data-testid="welcome">Welcome, reviewer</h2>';
+    } else {
+      resultElement.innerHTML = "";
+      errorElement.textContent = "Invalid credentials";
+    }
+  });
+</script>
+""")
+
+
+print("app.py is running")

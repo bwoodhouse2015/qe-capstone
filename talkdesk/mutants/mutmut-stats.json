@@ -1,0 +1,56 @@
+{
+    "tests_by_mangled_function_name": {
+        "app.x_normalize_search_query": [
+            "tests/unit/test_search_query.py::test_normalize_search_query_handles_empty_string",
+            "tests/unit/test_search_query.py::test_normalize_search_query_handles_single_word",
+            "tests/unit/test_search_query.py::test_normalize_search_query_trims_collapses_and_lowercases"
+        ],
+        "app.x_normalize_title": [
+            "tests/unit/test_search_query.py::test_normalize_title_rejects_empty_title",
+            "tests/unit/test_search_query.py::test_normalize_title_trims_whitespace"
+        ]
+    },
+    "duration_by_test": {
+        "tests/unit/test_search_query.py::test_normalize_search_query_trims_collapses_and_lowercases": 0.00015287100006844412,
+        "tests/unit/test_search_query.py::test_normalize_search_query_handles_empty_string": 0.00013972600004308333,
+        "tests/unit/test_search_query.py::test_normalize_search_query_handles_single_word": 8.067299995673238e-05,
+        "tests/unit/test_search_query.py::test_normalize_title_trims_whitespace": 7.900000002791785e-05,
+        "tests/unit/test_search_query.py::test_normalize_title_rejects_empty_title": 0.00014838300000974414
+    },
+    "stats_time": 0.906721371,
+    "function_hashes": {
+        "app.x_db": "d41265c51547",
+        "app.x_normalize_search_query": "e8eadeac0379",
+        "app.x_normalize_title": "8055f43fc884",
+        "app.x_page": "0f6d066bd106"
+    },
+    "function_dependencies": {},
+    "config_fingerprint": {
+        "test_execution": "fcedbaa10f72",
+        "test_selection": "2e38e77b22c3",
+        "timeout": "d3052321fdc3",
+        "type_check": "2e38e77b22c3"
+    },
+    "watched_file_hashes": {
+        "setup.cfg": "25524526c765",
+        "requirements-dev.txt": "f3a495fde635",
+        "requirements.txt": "f9b99dca832a",
+        "db/01-schema.sql": "1a8ac40d3688",
+        "db/02-seed.sql": "1ee3796cc3eb",
+        "docker-compose.yml": "64def62af71a",
+        "dotnet/Dockerfile": "d820d274520c",
+        "dotnet/Program.cs": "03021c5bdf3c",
+        "dotnet/TalkDesk.csproj": "f2a28e1d25cf",
+        "java/Dockerfile": "d3d8bc320bc5",
+        "java/pom.xml": "3307a1d8ab72",
+        "java/src/main/java/test/talkdesk/TalkDeskApplication.java": "3c870405e0f5",
+        "java/src/main/resources/application.properties": "09946148ae34",
+        "mutants/app.py.meta": "19f22a770096",
+        "mutants/app.py.spans": "ce65169cf256",
+        "mutants/setup.cfg": "25524526c765",
+        "python/Dockerfile": "b2ee60727efa",
+        "python/app.log": "e3b0c44298fc",
+        "python/requirements.txt": "d519fd9529ee"
+    },
+    "git_commit": "b77847a33372417ce63e00de99a29ed7acb1cff0"
+}
