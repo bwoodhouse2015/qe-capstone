@@ -62,6 +62,8 @@ def test_database_health_and_performance():
     assert result[0] == unique_value
 
     # Performance thresholds
-
     assert write_time < 0.5
     assert read_time < 0.5
+
+
+##this tests is database connect, write and reads?
