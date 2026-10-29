@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from app import app
 
-client = TestClient(app)
+client = TestClient(app) ## Creates user
 
 
 def test_search_handles_large_input():
