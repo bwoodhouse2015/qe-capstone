@@ -1,4 +1,4 @@
-import os ##imports python operating systen
+import os ##imports python operating system
 import psycopg ## imports PostgreSQL driver
 
 

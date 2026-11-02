@@ -6,7 +6,7 @@ client = TestClient(app) ## Creates a fake user
 
 def test_invalid_login_rejected():
 
-    response = client.post(  ## This is sending a HTTP POST request using API
+    response = client.post(  ## This is sending an HTTP POST request using API
         "/api/login",
         json={ ##Invalid information being input
             "email": "hacker@example.com",

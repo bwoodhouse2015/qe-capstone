@@ -18,7 +18,7 @@ def test_search_handles_large_input():
     ##400 bad request would be acceptable as it would mean that the characters were not accepted
     ##413 pay load too large would also be an acceptable response
 
-    ##500 error would mean the data input crashed the program, which would result in a failure
+    ##500 error would mean the data were input and crashed the program, which would result in a failure
 
     forbidden_strings = [
         "traceback",
@@ -32,4 +32,4 @@ def test_search_handles_large_input():
         assert item not in response.text.lower()
 
 
-##this tests verifies the program does not crash with invalid characters limit boundaries
+## This tests verifies the program does not crash with invalid characters limit boundaries
