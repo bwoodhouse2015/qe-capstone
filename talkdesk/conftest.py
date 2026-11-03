@@ -1,40 +1,40 @@
-import time ## Gives access to sleep and pauses in the code
+import time ##Python's built-in time module, used for the pauses
 
-passed_tests = set()
-failed_tests = set()
+passed_tests = set() ## These are sets
+failed_tests = set() ## It is a collection of unique values
 
 
 def pytest_runtest_logreport(report):
-    test_title = report.nodeid
+    test_title = report.nodeid ## Gets the test name
 
-    if report.failed:
-        failed_tests.add(test_title)
-        passed_tests.discard(test_title)
+    if report.failed: ## If this test fails, then this block runs
+        failed_tests.add(test_title) ## Adds the failed test and the title
+        passed_tests.discard(test_title) ## Removes it from passed tests
 
-    elif report.when == "call" and report.passed:
-        passed_tests.add(test_title)
+    elif report.when == "call" and report.passed: ## When the test runs it will have a before, actual test running, and the tear down which would mean that the test completed, creates a report, so if there is an issue at any of these stages it should report at what stage had an issue
+        passed_tests.add(test_title) ## Adds the passed test with title of the test
 
 
-def show_test_statistics():
-    passed_count = len(passed_tests)
-    failed_count = len(failed_tests)
+def show_test_statistics(): ## This will show the stats for the failed and passed tests
+    passed_count = len(passed_tests) ## Counts the passed tests in a collection
+    failed_count = len(failed_tests) ## counts the failed tests in a collection
 
-    print("\nTEST RESULTS:")
-    print(f"Total tests: {passed_count + failed_count}")
-    print(f"Passed tests: {passed_count}")
-    print(f"Failed tests: {failed_count}")
+    print("\nTEST RESULTS:") ## In a new line, this will print out when called
+    print(f"Total tests: {passed_count + failed_count}") ## This prints both the failed and passed tests as total tests executed
+    print(f"Passed tests: {passed_count}") ## This prints out the passed tests executed
+    print(f"Failed tests: {failed_count}") ## This prints out the failed tests executed
 
     if failed_tests:
-        print("\nFAILED TEST TITLES:")
+        print("\nFAILED TEST TITLES:") ## When there are failed tests, it will print the titles of the tests
 
-        for test_title in sorted(failed_tests):
-            print(f"  FAILED: {test_title}")
+        for test_title in sorted(failed_tests): ## Sorts the failed tests
+            print(f"  FAILED: {test_title}") ## Shows the title of the failed test
 
     else:
-        print("\nNo tests failed.")
+        print("\nNo tests failed.") ## If no tests fail then this will print under the stats
 
 
-def pytest_sessionfinish(session, exitstatus): ##When the last test is run when it finishes it preforms an exit status, that is when this code will run when EVERYTHING PASSES
+def pytest_sessionfinish(session, exitstatus): ## When the last test is run when it finishes it preforms an exit status, that is when this code will run when EVERYTHING PASSES
 
     if exitstatus == 0:
 
@@ -56,12 +56,12 @@ def pytest_sessionfinish(session, exitstatus): ##When the last test is run when 
         for line in fireworks: ## Meaning take one line and print it, then move onto the next line
             print(line)
             if "Bethany" in line:
-                time.sleep(1.5) ##Pauses for 1.5 seconds specifically when Bethany is shown in the line
-            elif"All tests passed Ta Da!" in line:
-                time.sleep(2) ## Pauses for 2 seconds
+                time.sleep(1.5) ## Pauses for 1.5 seconds specifically when Bethany is shown in the line
+
             else:
                 time.sleep(0.2)
-        show_test_statistics()
+        time.sleep(2)
+        show_test_statistics() ## This is call for the stats if it passes
     else: ## For if there is a failing test this celebration will happen
 
         for i in range(10): ## This drops the bomb emoji counting down until 1
@@ -118,7 +118,7 @@ def pytest_sessionfinish(session, exitstatus): ##When the last test is run when 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠒⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 """)
-        show_test_statistics()
+        show_test_statistics() ## This is called when the tests fail
 
 
 
