@@ -2,7 +2,7 @@ import os ## Import python operating system
 
 ## http://127.0.0.1:8001/login
 
-BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8001") ## Import os gives access to this function which reads environment variables, "Is there an environment variable named BASE_URL?"
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8080") ## Import os gives access to this function which reads environment variables, "Is there an environment variable named BASE_URL?"
 
 
 class LoginPage: ##Blueprint for interacting with the login page, creates reusable functions
@@ -16,6 +16,7 @@ class LoginPage: ##Blueprint for interacting with the login page, creates reusab
         self.page.get_by_test_id("email").fill(email)
         self.page.get_by_test_id("password").fill(password)
         self.page.get_by_test_id("login-submit").click()
+
 ## Playwright's purpose here is to find the elements that in the string and then either fill or click
 
 ## Instead of having to write fill email etc. in each test using the log in function we can call them using this class created
