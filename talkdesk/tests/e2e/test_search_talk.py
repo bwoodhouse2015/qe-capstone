@@ -1,8 +1,8 @@
-from fastapi.testclient import TestClient ## Interacts with browser
+from fastapi.testclient import TestClient
 
-from app import app ## Imports objects from app.py
+from app import app
 
-client = TestClient(app) ## This creates a simulated user
+client = TestClient(app)
 
 def test_search_talk_flow():
 

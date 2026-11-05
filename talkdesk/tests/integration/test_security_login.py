@@ -1,23 +1,23 @@
-from fastapi.testclient import TestClient
-from app import app
+from pages.login_page import LoginPage ## Interacts with login_page.py
+import time
 
-client = TestClient(app) ## Creates a fake user
+def test_reviewer_can_sign_in(page): ## Creates pytest, page is parameter that is pulled using playwright (browser tab)
+    login_page = LoginPage(page) ## Created new object and passes page into the constructor inside of login_page.py
 
+    login_page.goto() ## Navigates to log in page
 
-def test_invalid_login_rejected():
-
-    response = client.post(  ## This is sending an HTTP POST request using API
-        "/api/login",
-        json={ ##Invalid information being input
-            "email": "hacker@example.com",
-            "password": "wrongpassword"
-        }
+    login_page.login(
+        "hacker@hacker.com", ## Data input for test
+        "123456789"
     )
+    from playwright.sync_api import expect
+    ## Imports playwright's assertion library, which then verifies what is excepted below
 
-    assert response.status_code in [401, 403] ## Expected results that would result in a PASS
+    time.sleep(3) ## Set wait to see the long in page open when the test isn't run headless
 
-    ## This tests authentication log in, "Can an invalid user log in?"
+    expect( ## This verifies the result
 
-    ## Failures would include results of 200 OK, Application crashes with 500 internal error
+        page.locator("text=Invalid credentials") ## The output needed to PASS
+        ).to_be_visible()
 
-    ## The reason this is an integration test because it uses 2 components which is the HTTP request > Fast API routing > Authentication logic > HTTP Response
+## this test is an automated version of api_test_security_login.py

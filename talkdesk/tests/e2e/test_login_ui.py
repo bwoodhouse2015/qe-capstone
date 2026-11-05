@@ -14,7 +14,7 @@ def test_reviewer_can_sign_in(page): ## Creates pytest, page is parameter that i
     from playwright.sync_api import expect
     ## Imports playwright's assertion library, which then verifies what is excepted below
 
-    time.sleep(5) ## Set wait to see the long in page open when the test isn't run headless
+    time.sleep(3) ## Set wait to see the long in page open when the test isn't run headless
 
     expect( ## This verifies the result
         page.locator("text=Welcome, reviewer") ## The output needed to PASS

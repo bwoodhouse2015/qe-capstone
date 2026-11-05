@@ -25,4 +25,4 @@ def test_database_connection():
 
 
 ## Purpose of this test: Verify the application can connect to PostgreSQL and execute SQL.
-## Helped diagnose database connectivity issues that were causing extremely slow test execution.
+## Helped diagnose database connectivity issues that were causing extremely slow test execution

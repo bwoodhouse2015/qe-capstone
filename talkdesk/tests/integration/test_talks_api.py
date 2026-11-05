@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient ##Allows you to send HTTP responses wi
 
 from app import app ##imports FastAPI from appy.py
 
-client = TestClient(app) ##Creates a fake user
+client = TestClient(app)
 
 
 

@@ -80,7 +80,7 @@ def pytest_sessionfinish(session, exitstatus): ## When the last test is run when
 
         """)
         time.sleep(2) ## Waits 2 seconds before the frame jumps
-        print("\033[2J\033[H", end="") ## this is using the ANSI terminal, which clears the terminal, teh first part of the string is what moves the cursor to the top left corner and it will show the boom disappearing
+        print("\033[2J\033[H", end="") ## this is using the ANSI terminal, which clears the terminal, the first part of the string is what moves the cursor to the top left corner and it will show the boom disappearing
             ## 003 part is Python code for the escp key in the terminal, the 2J part means clear the screen, together becomes clear terminal, H means move cursor to home position
         print("""
 

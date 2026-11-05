@@ -16,7 +16,7 @@ def test_talk_submission_flow():
         "/api/talks", ##end point responsible for creating the talks
         json={
             "speaker_id": 1,
-            "title": "Week 2 E2E Test Talk", ##body converts from python to JSON when sent to APT
+            "title": "Week 2 E2E Test Talk",
             "abstract": "Testing end-to-end submission flow.",
             "track": "testing"
         }
